@@ -1,14 +1,155 @@
 <html>
+{% load staticfiles %}
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="HandheldFriendly" content="true">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <title>Home</title>
     {% include 'cssandjs.html' %}
 </head>
-<body>
-    <div class = container>
-        
+<body >
+<div class="home_background_container prlx_parent">
+			<div class="home_background prlx" style="background-image: url({% static "images/back.jpeg" %}) "></div>
 
-    
-    </div>
+		</div>
+   <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+               <p style="font-weight:bold; font-size:30px;  color:white;">Hastakshar</p>
+            </div>
+            <div class="col-sm-4">
+                <form type="" action="." style="">
+                    {% csrf_token %}
+                <input class="" type="text" placeholder="Search" aria-label="Search" style="height:30px; width:200px; font-size:15px;">
+                    <button class="btn btn-primary" id="search_submit" type="submit" >Search</button>
+                </form>
+<!--                <div id = "">-->
+<!--&lt;!&ndash;                <form action="" method="get" id = "search-form">&ndash;&gt;-->
+<!--                    <input type="search" class="search_input bez_1">-->
+
+<!--   <div class="col-sm-6">-->
+<!--      <button class="btn btn-primary" id="search_submit" name = "search_submit" type="submit" value = "submit" ><span class="glyphicon glyphicon-search"></span></button>-->
+<!--    </div>-->
+        </div>
+             <div class="col-sm-2 dropdown" style="">
+                 <button class="btn btn-secondary glyphicon glyphicon-globe" type="button" id="dropdownMenuButton" style="font-size:15px; " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                </button>
+<!--                 <i class="material-icons dropdown-toggle" type="button" id="dropdownMenuButton" style="font-size:20px;color:blue; margin-left:100px;">vpn_lock</i>-->
+                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <h5>Nabil bank tried to verify tour signature at 10 am July 6.</h5>
+                     <hr>
+                     <h5>Nabil bank successfully verifies your signature.</h5>
+
+                </div>
+
+            </div>
+            <div class="col-sm-2 dropdown" style="">
+                <button class="btn btn-secondary dropdown-toggle glyphicon glyphicon-cog" type="button" id="dropdownMenuButton" style="font-size:15px; " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Settings
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="#">Logout</a>
+                </div>
+<!--                <a href="#"><span class="glyphicon glyphicon-cog" style="font-size:30px; margin-left:200px;"></span></a>-->
+            </div>
+            </div>
+            </div>
+
+      {% block body_block %}
+
+        {% endblock %}
+       <div class="row">
+
+           <div class="col-sm-6">
+               <div class="card card-cascade narrower" style=" width:400px;  ">
+
+  <!-- Card image -->
+            <div class="view view-cascade gradient-card-header purple-gradient">
+
+    <!-- Title -->
+            <h2 class="card-header-title" style="font-size:18px; color:white;"> People who have allowed you </h2>
+                <hr>
+    <!-- Subtitle -->
+            <h5 class="mb-0 pb-3 pt-2"style="font-size:18px; color:white;">You can now verify the signature of people listed below:</h5>
+
+            </div>
+
+           </div>
+               <div class="row" style="">
+                   <div class="col-sm-6">
+                        <ol>
+                            <div class="col-sm-3">
+                                <li style="font-size:15px;">Prakash</li>
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-info">Verify</button>
+                            </div>
+                            <div class="col-sm-3">
+                                <li style="font-size:15px;">Madan</li>
+                            </div>
+                             <div class="col-sm-3">
+                                <button type="button" class="btn btn-info">Verify</button>
+
+                            </div>
+                        </ol>
+                   </div>
+<!--                   <div class="col-sm-6">-->
+<!--                       <button type="button" class="btn btn-info">Verify</button>-->
+<!--                   </div>-->
+
+               </div>
+           </div>
+
+           <div class="col-sm-6">
+                <div class="card card-cascade narrower" style=" width:400px; ">
+
+  <!-- Card image -->
+            <div class="view view-cascade gradient-card-header purple-gradient">
+
+    <!-- Title -->
+            <h2 class="card-header-title"style="font-size:18px; color:white; "> Allowed List</h2>
+                <hr>
+    <!-- Subtitle -->
+            <h5 class="mb-0 pb-3 pt-2"style="font-size:18px; color:white;">List of all people who are allowed to verify your signature:</h5>
+
+            </div>
+
+           </div>
+                <div class="row">
+                   <div class="col-sm-6" style="">
+                        <ol>
+                            <div class="col-sm-3">
+                                <li style="font-size:15px;">Prakash</li>
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-info">Disallow</button>
+                            </div>
+                            <div class="col-sm-3">
+                                <li style="font-size:15px;">Madan</li>
+                            </div>
+                             <div class="col-sm-3">
+                                <button type="button" class="btn btn-info">Disallow</button>
+
+                            </div>
+                        </ol>
+                   </div>
+
+           </div>
+
+
+       </div>
+
+
+
+</div>
+
+
 
 </body>
 </html>

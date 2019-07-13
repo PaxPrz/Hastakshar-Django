@@ -1,0 +1,19 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
+ <div class="jumbotron jumbotron-fluid blue-grey lighten-5 container">
+           <div  class="row d-flex justify-content-center">
+               <h4 style="font-size:30px;color:blue;">You don't have any documents!!</h4>
+           </div>
+       <div  class="row d-flex justify-content-center">
+           <h5 style="font-size:20px; color:blue;">Would you like to upload your signatures?</h5>
+       </div>
+
+       <div class="row d-flex justify-content-center">
+           <a href="{% url 'train_sign' %}" class="btn btn-info">Upload</a>
+<!--        <button type="Submit" class="btn btn-info" style="font-size:20px; color:white;">Upload</button>-->
+       </div>
+
+       </div>
+{% endblock %}

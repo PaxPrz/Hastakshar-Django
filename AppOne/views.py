@@ -17,6 +17,10 @@ def index(request):
     getmd5('xyz.png')
     return render(request, 'AppOne/index.html')
 
+
+def home(request):
+    return  render(request, 'home.html')
+
 @csrf_exempt
 def train_sign(request):
     if request.method == "GET":
@@ -25,7 +29,7 @@ def train_sign(request):
         d = dt.now()
         filename = str(d.date().year)+'-'+str(d.date().month)+'-'+str(d.date().day)+'-'+str(d.time().hour)+'-'+str(d.time().minute)+'-'+str(d.time().second)
         train(filename)
-        return redirect('upload_sign')
+        return redirect('uploadsign')
 
 @csrf_exempt
 def test_sign(request):
@@ -36,6 +40,7 @@ def test_sign(request):
         print("******** Test is happening here **********")
         acc = test(filename)
         return render(request, "test_me.html", {"result":acc*100})
+
 
 def register(request):
     if request.method == 'GET':
@@ -58,6 +63,7 @@ def register(request):
         else:
             return HttpResponse('Error during submission')
 
+@csrf_exempt
 def user_login(request):
     if request.method == 'GET':
         custom_user_form = Custom_user_form()
@@ -73,7 +79,7 @@ def user_login(request):
             if user.is_active:
                 login(request, user)
                 messages.success(request, 'Login Successful')
-                return redirect('upload_sign')
+                return redirect('uploadsign')
             else:
 
                 return redirect('register')
@@ -84,18 +90,20 @@ def user_login(request):
             messages.error(request, 'Sorry Recheck your username or password')
 
 
-@login_required(login_url='/AppOne/register')
+@login_required(login_url='/AppOne/user_login')
 def user_logout(request):
     logout(request)
-    return redirect("AppOne:redirect_user")
+    return redirect("AppOne:register")
 
 
 
-def upload_sign(request):
-    if request.method == 'GET':
-        return render(request, 'AppOne/upload.html')
+# def upload_sign(request):
+#     if request.method == 'GET':
+#         return render(request, 'AppOne/upload.html')
 
 
+@csrf_exempt
+@login_required(login_url='/AppOne/user_login')
 def upload(request):
     if request.method == 'GET':
         signature = Signature_form()
@@ -105,10 +113,11 @@ def upload(request):
         signature = Signature_form(request.POST, request.FILES)
         print('********')
         # imgs = request.FILES['signature']
-        images = request.FILES.getlist('signature');
+        images = request.FILES.getlist('signature')
         print("Type:", type(images))
         print("List Length: ", len(images))
         for img in images:
+
             # pic = request.FILES['signature']
             # pic.image = img
             #img.save()
@@ -120,19 +129,30 @@ def upload(request):
 
         # if signature.is_valid():
         # signature.save()
-        return redirect('upload_sign')
+        return redirect('uploadsign')
         # else:
         #     return HttpResponse('Sorry!')
 
 
-
-
-
+@csrf_exempt
 @login_required(login_url='/AppOne/user_login')
-def user_logout(request):
-    logout(request)
-    return redirect("AppOne:redirect_user")
+def uploadsign(request):
+    return render(request, 'uploadsign.html')
 
+
+
+@csrf_exempt
+@login_required(login_url='/AppOne/user_login')
+def welcome(request):
+    return render(request, 'welcome.html')
+
+
+
+# @login_required(login_url='/AppOne/user_login')
+# def user_logout(request):
+#     logout(request)
+#     return redirect("AppOne:redirect_user")
+#
 
 
 
