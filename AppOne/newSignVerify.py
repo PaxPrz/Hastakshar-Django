@@ -6,8 +6,10 @@ import ast
 import numpy as np
 # import matplotlib.pyplot as plt
 from keras.preprocessing import image
+from keras import backend as K
 import hashlib
 import tensorflow as tf
+import time
 
 # import pycuda.autoinit
 # from pycuda import gpuarray
@@ -114,7 +116,8 @@ def segmentImage(image):
 def preProcessImage(train_path, final_img_size = (300,300), power_law=False, segment=True, log_transform=False):
   train_batch = os.listdir(train_path)
   x_train = []
-  train_data = [x for x in train_batch if x.endswith('png') or x.endswith('PNG') or x.endswith('jpg') or x.endswith('JPG') or x.endswith('TIF') or x.endswith('tif')]
+  train_data = train_batch
+  #train_data = [x for x in train_batch if x.endswith('png') or x.endswith('PNG') or x.endswith('jpg') or x.endswith('JPG') or x.endswith('TIF') or x.endswith('tif')]
 
   for sample in tqdm(train_data):
     img_path = os.path.join(train_path, sample)
@@ -292,6 +295,7 @@ def getmd5(filename):
     print("##############################")
     print("MD5: {0}".format(md5.hexdigest()))
     print("##############################")
+    return md5.hexdigest()
 
 def train(filename):
     mod= model()
@@ -301,13 +305,17 @@ def train(filename):
     x_random = csvReader(os.path.join(x_random_csv_path, 'random3'))
     # another training
     mod.fit(np.concatenate((x_genuine, x_random)).reshape(x_genuine.shape[0] + x_random.shape[0], 300, 300, 1),
-            np.concatenate((np.full(x_genuine.shape[0], 1), np.full(x_random.shape[0], 0))), epochs=10, verbose=1,
+            np.concatenate((np.full(x_genuine.shape[0], 1), np.full(x_random.shape[0], 0))), epochs=2, verbose=1,
             shuffle=True)
 
     evaluated = mod.evaluate(x_genuine.reshape(x_genuine.shape[0], 300, 300, 1), np.full((x_genuine.shape[0]), 1))
     print('Accuracy: ', evaluated[1] * 100, '%')
 
     mod.save_weights(os.path.join(save_path, filename+'.h5'))
+
+    time.sleep(1)
+
+    return getmd5(os.path.join(save_path, filename+'.h5'))
     # mod.save_weights(filename+'.h5')
 
     # else:
@@ -315,18 +323,20 @@ def train(filename):
 
 
 def test(filename):
+    K.clear_session()
     global graph
-    mod= model()
-    mod.load_weights(os.path.join(save_path, filename+'.h5'))
-    mod._make_predict_function()
+    mods= model()
+    mods.load_weights(os.path.join(save_path, filename+'.h5'))
+    mods._make_predict_function()
     print("$$$$$$$$$$$$$ HAS LOADED $$$$$$$$$$")
     x_test = preProcessImage(x_test_path)
     x_test = x_test.reshape(300, 300, 1)
     with graph.as_default():
         # predicted_acc = mod.predict(np.array([x_test.reshape(300, 300, 1), ]))
-        predicted_acc = mod.predict(np.array([x_test, ]))
+        predicted_acc = mods.predict(np.array([x_test, ]))
     print("\n\nAccuracy of Sign in Test Folder: ", predicted_acc * 100, "%")
     print("*** If percent > 90% accept the signature ***")
+    K.clear_session()
     return predicted_acc[0][0]
 
 '''

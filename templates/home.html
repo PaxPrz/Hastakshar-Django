@@ -9,6 +9,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <style>
+    .table-font tbody td {
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: bold;
+        color: #000000;
+    }
+    .table-font thead td {
+        font-family: Arial;
+        font-size: 14px;
+        font-weight: bold;
+        color: #000000;
+    }
+    </style>
     <title>Home</title>
     {% include 'cssandjs.html' %}
 </head>
@@ -25,7 +39,7 @@
             <div class="col-sm-4">
                 <form type="" action="." style="">
                     {% csrf_token %}
-                <input class="" type="text" placeholder="Search" aria-label="Search" style="height:30px; width:200px; font-size:15px;">
+                <input class="" type="text" placeholder="Search" aria-label="Search" style="width:70%;font-size:15px;">
                     <button class="btn btn-primary" id="search_submit" type="submit" >Search</button>
                 </form>
 <!--                <div id = "">-->
@@ -64,26 +78,28 @@
       {% block body_block %}
 
         {% endblock %}
+        
        <div class="row">
 
-           <div class="col-sm-6">
-               <div class="card card-cascade narrower" style=" width:400px;  ">
+           <div class="col-sm-6" align="center">
+
+           <div class="col-sm-9">
+               <div class="card card-cascade narrower">
 
   <!-- Card image -->
-            <div class="view view-cascade gradient-card-header purple-gradient">
+            <div class="view view-cascade gradient-card-header green" style="padding:10px">
 
     <!-- Title -->
-            <h2 class="card-header-title" style="font-size:18px; color:white;"> People who have allowed you </h2>
+            <h2 class="card-header-title" style="font-size:20px; color:white; font-weight:bold; font-family:Courier New;"> People Allowed you </h2>
                 <hr>
     <!-- Subtitle -->
-            <h5 class="mb-0 pb-3 pt-2"style="font-size:18px; color:white;">You can now verify the signature of people listed below:</h5>
+            <h5 class="mb-0 pb-3 pt-2"style="font-size:12px; color:white;">You can now verify the signature of people listed below:</h5>
 
             </div>
-
-           </div>
+{% comment %} 
                <div class="row" style="">
-                   <div class="col-sm-6">
-                        <ol>
+                   <div class="col-sm-6"> {% endcomment %}
+                        {% comment %} <ol>
                             <div class="col-sm-3">
                                 <li style="font-size:15px;">Prakash</li>
                             </div>
@@ -97,33 +113,53 @@
                                 <button type="button" class="btn btn-info">Verify</button>
 
                             </div>
-                        </ol>
+                        </ol> {% endcomment %}
+                        <table class="table table-striped table-font">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Email</td>
+                                    <td>Action</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for signee in hasAllowed %}
+                                <tr>
+                                <td>{{signee.name}}</td>
+                                <td>{{signee.emailId}}</td>
+                                <td><button type="button" class="btn btn-info">Verify</button></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                    </div>
 <!--                   <div class="col-sm-6">-->
 <!--                       <button type="button" class="btn btn-info">Verify</button>-->
 <!--                   </div>-->
-
+{% comment %} 
+           </div>
+               </div> {% endcomment %}
                </div>
            </div>
 
-           <div class="col-sm-6">
-                <div class="card card-cascade narrower" style=" width:400px; ">
+           <div class="col-sm-6" align="center">
+           <div class="col-sm-9">
+                <div class="card card-cascade narrower">
 
   <!-- Card image -->
-            <div class="view view-cascade gradient-card-header purple-gradient">
+            <div class="view view-cascade gradient-card-header red" style="padding:10px">
 
     <!-- Title -->
-            <h2 class="card-header-title"style="font-size:18px; color:white; "> Allowed List</h2>
+            <h2 class="card-header-title"style="font-size:20px; color:white; font-weight:bold; font-family:Courier New; ">Your Allowed List</h2>
                 <hr>
     <!-- Subtitle -->
-            <h5 class="mb-0 pb-3 pt-2"style="font-size:18px; color:white;">List of all people who are allowed to verify your signature:</h5>
+            <h5 class="mb-0 pb-3 pt-2"style="font-size:12px; color:white;">List of all people who are allowed to verify your signature:</h5>
 
             </div>
 
-           </div>
-                <div class="row">
-                   <div class="col-sm-6" style="">
-                        <ol>
+                {% comment %} <div class="row">
+                   <div class="col-sm-6" style=""> {% endcomment %}
+                        {% comment %} <ol>
                             <div class="col-sm-3">
                                 <li style="font-size:15px;">Prakash</li>
                             </div>
@@ -137,11 +173,30 @@
                                 <button type="button" class="btn btn-info">Disallow</button>
 
                             </div>
-                        </ol>
-                   </div>
+                        </ol> {% endcomment %}
+                        <table class="table table-striped table-font">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Email</td>
+                                    <td>Action</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for signee in allowed %}
+                                <tr>
+                                <td>{{signee.name}}</td>
+                                <td>{{signee.emailId}}</td>
+                                <td><button type="button" class="btn btn-info">Disallow</button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                   {% comment %} </div>
 
+                </div> {% endcomment %}
            </div>
-
+        </div>
 
        </div>
 
