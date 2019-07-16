@@ -37,10 +37,10 @@
                <p style="font-weight:bold; font-size:30px;  color:white;">Hastakshar</p>
             </div>
             <div class="col-sm-4">
-                <form type="" action="." style="">
+                <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                <input class="" type="text" placeholder="Search" aria-label="Search" style="width:70%;font-size:15px;">
-                    <button class="btn btn-primary" id="search_submit" type="submit" >Search</button>
+                <input class="" type="text" name="query" placeholder="Search" aria-label="Search" style="width:70%;font-size:15px;">
+                    <button class="btn btn-primary" id="search_submit" type="submit" name="search" value="search" >Search</button>
                 </form>
 <!--                <div id = "">-->
 <!--&lt;!&ndash;                <form action="" method="get" id = "search-form">&ndash;&gt;-->
@@ -127,7 +127,9 @@
                                 <tr>
                                 <td>{{signee.name}}</td>
                                 <td>{{signee.emailId}}</td>
-                                <td><button type="button" class="btn btn-info">Verify</button></td>
+                                <td><form method="POST" enctype="multipart/form-data">
+                                <input type="file" class="btn btn-info" name="verify" value="{{signee.emailId}}" onchange="form.submit()">
+                                </form></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -187,7 +189,9 @@
                                 <tr>
                                 <td>{{signee.name}}</td>
                                 <td>{{signee.emailId}}</td>
-                                <td><button type="button" class="btn btn-info">Disallow</button></td>
+                                <td><form method="POST" enctype="multipart/form-data">
+                                <button type="submit" name="disallow" value="{{signee.emailId}}" class="btn btn-info">Disallow</button>
+                                </form></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

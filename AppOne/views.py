@@ -17,6 +17,8 @@ from django.core.files.storage import FileSystemStorage
 from datetime import datetime as dt
 import requests
 import json
+import re
+import os
 
 IP = "127.0.0.1"
 PORT = "3000"
@@ -105,6 +107,10 @@ def user_login(request):
         return render(request, 'AppOne/login.html', {'form':custom_user_form})
 
     else:
+        #if "login" in request.POST:
+        print("&&&&&&&&&&&&&&&&&&&&&&&&")
+        print(request.POST)
+        print("&&&&&&&&&&&&&&&&&&&&&&&&")
         data={
         "$class": "com.pax.signature.UserCheck",
         "email": "",
@@ -117,9 +123,7 @@ def user_login(request):
         data_json = json.dumps(data)
         output = requests.post('http://'+IP+':'+PORT+'/api/UserCheck', headers={"content-type": "application/json"}, data=data_json)
         if output.status_code == 200:
-            print("&&&&&&&&&&&&&&&&&&&&&&&&")
-            print(output.text)
-            print("&&&&&&&&&&&&&&&&&&&&&&&&")
+            
             response = redirect('uploadsign')
             response.set_cookie('id', port)
             response.set_cookie('email', email)
@@ -187,58 +191,136 @@ def upload(request):
         #     return HttpResponse('Sorry!')
 
 
+def homeData(user_email, signee):
+    allowed=[]
+    data = {"hasSign":"False", "hasAllowed":[], "allowed":[]}
+    for i in signee:
+        if i['emailId']==user_email:
+            allowed = i['allowedList']
+            if i.get("sign","notAvailable") == "notAvailable":
+                data["hasSign"] = "False"
+            else:
+                data["hasSign"] = "True"
+            break
+    for i in signee:
+        if user_email in i['allowedList']:
+            data['hasAllowed'].append(i)
+        if i['emailId'] in allowed:
+            data['allowed'].append(i)
+    return data, allowed
+
 @csrf_exempt
 #@login_required(login_url='/AppOne/user_login')
 def uploadsign(request):
     if request.method == "GET":
         signee_json = requests.get("http://"+IP+":"+request.COOKIES.get('id')+"/api/Signee")
         signee = json.loads(signee_json.text)
-        allowed=[]
-        user_email = request.COOKIES.get('email')
-        data = {"hasSign":"False", "hasAllowed":[], "allowed":[]}
-        for i in signee:
-            if i['emailId']==user_email:
-                allowed = i['allowedList']
-                if i.get("sign","notAvailable") == "notAvailable":
-                    data["hasSign"] = "False"
-                else:
-                    data["hasSign"] = "True"
-                break
-
-        for i in signee:
-            if user_email in i['allowedList']:
-                data['hasAllowed'].append(i)
-            if i['emailId'] in allowed:
-                data['allowed'].append(i)
-                
+        data, allowed = homeData(request.COOKIES.get('email'), signee)                
         return render(request, 'uploadsign.html', data)
     elif request.method == "POST":
-        print("**********")
-        print("I am upload")
-        images = request.FILES.getlist('signatures')
-        print(images)
-        fs = FileSystemStorage(location=GENUINE_PATH)
-        for i,img in enumerate(images):
-            fname = fs.save("Gen"+str(i), img)
-        
-        d = dt.now()
-        filename = str(d.date().year)+'-'+str(d.date().month)+'-'+str(d.date().day)+'-'+str(d.time().hour)+'-'+str(d.time().minute)+'-'+str(d.time().second)
-        signHash = train(filename)
+        print("$$$$$$$$IN POST$$$$$$$$$$$")
+        print(request.POST)
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        if request.POST.get("form") == "uploadsign":
+            print("**********")
+            print("I am upload")
+            images = request.FILES.getlist('signatures')
+            print(images)
+            fs = FileSystemStorage(location=GENUINE_PATH)
+            for i,img in enumerate(images):
+                fname = fs.save("Gen"+str(i), img)
+            
+            d = dt.now()
+            filename = str(d.date().year)+'-'+str(d.date().month)+'-'+str(d.date().day)+'-'+str(d.time().hour)+'-'+str(d.time().minute)+'-'+str(d.time().second)
+            signHash = train(filename)
 
-        data={
-        "$class": "com.pax.signature.UploadSignature",
-        "sigId": "string",
-        "signatureHash": "string"
-        }
-        data['sigId'] = filename
-        data['signatureHash'] = signHash
-        data_json = json.dumps(data)
-        output = requests.post('http://'+IP+':'+request.COOKIES.get('id')+'/api/UploadSignature', headers={"content-type": "application/json"}, data=data_json)
+            data={
+            "$class": "com.pax.signature.UploadSignature",
+            "sigId": "string",
+            "signatureHash": "string"
+            }
+            data['sigId'] = filename
+            data['signatureHash'] = signHash
+            data_json = json.dumps(data)
+            output = requests.post('http://'+IP+':'+request.COOKIES.get('id')+'/api/UploadSignature', headers={"content-type": "application/json"}, data=data_json)
+            
+            if output.status_code == 200:
+                return redirect('uploadsign') 
+            else:
+                return HttpResponse("<h1>Sth is wrong</h1><br>"+output.text)
         
-        if output.status_code == 200:
-            return redirect('uploadsign') 
-        else:
-            return HttpResponse("<h1>Sth is wrong</h1><br>"+output.text)
+        if request.POST.get("search","None") != "None":
+            print("$$$$$$$$IN SEARCH$$$$$$$$$$$")
+            print(request.POST)
+            print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            searchkey = request.POST['query']
+            signee_json = requests.get("http://"+IP+":"+request.COOKIES.get('id')+"/api/Signee")
+            signee = json.loads(signee_json.text)
+            email = request.COOKIES.get('email')
+            data, allowed = homeData(email, signee)
+            search_list=[]
+            for i in signee:
+                if re.search(searchkey, str(i['emailId']), flags=re.IGNORECASE) or re.search(searchkey, str(i['name']), flags=re.IGNORECASE):
+                    i['allowed'] = "yes" if i['emailId'] in allowed else "no"
+                    i['hasAllowed'] = "yes" if email in i['allowedList'] else "no"
+                    search_list.append(i)
+            data['searchResult']=search_list
+            return render(request, 'search.html', data)
+
+        if request.POST.get("verify","None") != "None":
+            signee = request.POST.get("verify")
+            image = request.FILES['test']
+            fs = FileSystemStorage(location=TEST_PATH)
+            filename = fs.save("test", image)
+            data ={
+            "$class": "com.pax.signature.CheckAllowed",
+            "owner": {},
+            "signatureHash": "string"
+            }
+            data['owner']="com.pax.signature.Signee#"+str(signee)
+            d = requests.get('http://'+IP+':'+request.COOKIES.get('id')+'/api/Signee?filter={"where":{"emailId":"'+str(signee)+'"}}')
+            d = json.loads(d)
+            if d[0].get("sign","notAvailable")=="notAvailable":
+                return HttpResponse("<h1>User has no sign</h1>")
+            signFileName = d[0].get("sign").split('#')[1]
+            data['signatureHash'] = getmd5(os.path.join(MODEL_PATH, signFileName+".h5"))
+            data_json = json.dumps(data)
+            output1 = requests.post('http://'+IP+':'+request.COOKIES.get('id')+'/api/CheckAllowed', headers={"content-type": "application/json"}, data=data_json)
+            if output1.status_code == 200:
+                accuracy = test(signFileName)
+                data2 = {
+                "$class": "com.pax.signature.RecordResult",
+                "owner": {},
+                "result": 0
+                }
+                data2['owner'] = "com.pax.signature.Signee#"+str(signee)
+                data2['result'] = round(accuracy, 2)
+                data_json = json.dumps(data2)
+                output2 = requests.post('http://'+IP+':'+request.COOKIES.get('id')+'/api/RecordResult', headers={"content-type": "application/json"}, data=data_json)
+                if output2.status_code == 200:
+                    return redirect('uploadsign')
+                else:
+                    return HttpResponse("<h1>Error while recording result</h1>")               
+            else:
+                return HttpResponse("<h1>No authority to validate</h1>")
+            
+        if request.POST.get("disallow","None") != "None":
+            signee = request.POST.get("disallow")
+            data = {
+            "$class": "com.pax.signature.Disallow",
+            "email": "string"
+            }
+            data['email'] = str(signee)
+            data_json = json.dumps(data)
+            output = requests.post('http://'+IP+':'+request.COOKIES.get('id')+'/api/Disallow', headers={"content-type": "application/json"}, data=data_json)
+            if output.status_code == 200:
+                return redirect('uploadsign')
+            else:
+                return HttpResponse("<h1>Error Disallowing</h1>")
+        
+
+
+
     else:
         print(request.POST)
         print(request.FILES)
