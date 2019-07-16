@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+import os
 
 from AppOne.models import Custom_user, Signature
 from AppOne.forms import Custom_user_form, Signature_form
@@ -111,16 +112,28 @@ def upload(request):
 
     else:
         signature = Signature_form(request.POST, request.FILES)
+        user = Custom_user.objects.all()
+
         print('********')
         # imgs = request.FILES['signature']
         images = request.FILES.getlist('signature')
+        # img_extension = os.path.splitext(images.name)[1]
+        user_folder = '/media/user_signature'
+        if not os.path.exists(user_folder):
+            os.mkdir(user_folder)
         print("Type:", type(images))
         print("List Length: ", len(images))
         for img in images:
+            img_save_path = user_folder, 'signature'
+            if not os.path.exists(img_save_path):
+                os.mkdir(img_save_path)
+            with open(str((img_save_path), 'wb+')) as f:
+                for chunk in images.chunks():
+                    f.write(chunk)
 
             # pic = request.FILES['signature']
             # pic.image = img
-            #img.save()
+            # images.save()
 
             #print(signature)
             print('********')
@@ -153,6 +166,12 @@ def welcome(request):
 #     logout(request)
 #     return redirect("AppOne:redirect_user")
 #
+
+
+
+@login_required(login_url='user_login')
+def verify_user(request, email):
+
 
 
 

@@ -16,7 +16,9 @@ urlpatterns = [
     path('home/', views.home, name = 'home'),
     path('test_sign/', views.test_sign, name='test_sign'),
     path('uploadsign/', views.uploadsign, name = 'uploadsign'),
-    path('welcome/', views.welcome, name='welcome'),
+    path('welcome/', views.welcome, name='welc9ome'),
 
 ]
+
+
 

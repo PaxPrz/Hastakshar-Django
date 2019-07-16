@@ -1,4 +1,4 @@
-...<!DOCTYPE html>
+<!DOCTYPE html>
 {% load staticfiles %}
 
 <html lang="en">
@@ -14,8 +14,9 @@
         <form enctype="multipart/form-data" method="POST">
         {% csrf_token %}
 <!--        {{ form.as_p }}-->
-            <input type="file" name="signature" size="5" multiple>
+            <input type="file" name="signature" size="5" accept="image/gif, image/jpeg, image/png" multiple>
 <!--                        <input type="file" name="sign" size="5" multiple>-->
+
 
             <input type="submit" value="Upload">
     </form>
