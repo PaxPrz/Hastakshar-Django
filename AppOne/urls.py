@@ -17,6 +17,6 @@ urlpatterns = [
     path('test_sign/', views.test_sign, name='test_sign'),
     path('uploadsign/', views.uploadsign, name = 'uploadsign'),
     path('welcome/', views.welcome, name='welcome'),
-
+    path('notification/', views.get_notification, name="notification")
 ]
 

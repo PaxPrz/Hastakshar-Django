@@ -337,7 +337,7 @@ def test(filename):
     print("\n\nAccuracy of Sign in Test Folder: ", predicted_acc * 100, "%")
     print("*** If percent > 90% accept the signature ***")
     K.clear_session()
-    return predicted_acc[0][0]
+    return predicted_acc[0][0]*100
 
 '''
 history = mod.history.history

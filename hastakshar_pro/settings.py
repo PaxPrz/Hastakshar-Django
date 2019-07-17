@@ -69,6 +69,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{
+                'mycustomfilters': 'AppOne.template_tags.mycustomfilters'
+            }
         },
     },
 ]
@@ -123,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Virgin'
 
 USE_I18N = True
 
@@ -136,8 +139,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+PROFILE_URL = '/verification/profile/'
 STATICFILES_DIRS = [
     STATIC_DIR,
+    PROFILE_URL,
 ]
 
 

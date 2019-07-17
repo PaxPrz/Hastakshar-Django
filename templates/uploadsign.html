@@ -1,5 +1,19 @@
 {% extends 'home.html' %}
 {% load staticfiles %}
+
+{% block result_block %}
+{% if sendAlert == "True" %}
+    <div class = "row">
+        <div class = "col-md-12"  align="center">
+            <div class="alert alert-primary col-md-6" role="alert" style="font-size:16px">
+                {{alertMessage}}
+            </div>
+        </div>
+    </div>
+    </div>
+{% endif %}
+{% endblock %}
+
 {% block body_block %}
 <div class="jumbotron jumbotron-fluid blue-grey lighten-5 container" style="width:100%">
         <div  class="d-flex justify-content-center">
@@ -10,11 +24,14 @@
     </div>
 
     <div class="row d-flex justify-content-center">
-    <form method="POST" name="upload" value="uploadSign" enctype="multipart/form-data">
-        <input class="btn btn-info" type="file" name="form" value="uploadsign" placeholder="Upload" onchange="form.submit()" multiple>
+    <form method="POST" id="upload" enctype="multipart/form-data">
+        <input type="hidden" name="form" value="uploadSign"/>
+        <input class="btn btn-info" type="file" name="signatures" onchange="upload.submit()" multiple>
         </form>
 <!--        <button type="Submit" class="btn btn-info" style="font-size:20px; color:white;">Upload</button>-->
     </div>
 
     </div>
 {% endblock %}
+
+
