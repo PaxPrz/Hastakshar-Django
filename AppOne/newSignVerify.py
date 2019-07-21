@@ -152,9 +152,18 @@ def preProcessImage(train_path, final_img_size = (300,300), power_law=False, seg
         img=img.astype('uint8')
     
     #Threshold binary image
-    avg = np.average(img)
-    _,image = cv2.threshold(img, int(avg)-30, 255, cv2.THRESH_BINARY)
-            
+    # avg = np.average(img)
+    # _,image = cv2.threshold(img, int(avg)-30, 255, cv2.THRESH_BINARY)
+    
+    #New Steps in thresholding
+    dst = cv2.GaussianBlur(img,(3,3),cv2.BORDER_DEFAULT)
+  
+    img = dst-img
+    #Threshold binary image
+    _,image = cv2.threshold(img, 100, 255, cv2.THRESH_BINARY)
+    
+    image = cv2.medianBlur(image, 3)
+
     #segment the signature section only
     if(segment):
       seg = segmentImage(image)
