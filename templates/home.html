@@ -69,12 +69,14 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                 <a class="dropdown-item" href="#">Profile</a>
-                <a class="dropdown-item" href="#">Logout</a>
+                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
 <!--                <a href="#"><span class="glyphicon glyphicon-cog" style="font-size:30px; margin-left:200px;"></span></a>-->
             {% comment %} <div class="col-xl-5 col-md-4 mb-3 text-center"> {% endcomment %}
-                <img src="url(/verification/profile/{{email|splitByAdtherate}})" style="display:inline-block;" class="img-fluid z-depth-1 rounded-circle" alt="Profile" width="50px" height="50px">
+                {% with 'profile/'|add:email|splitByAdtherate as profileLoc %}
+                <img src="{% static profileLoc %}" style="display:inline-block;" class="img-fluid z-depth-1 rounded-circle" alt="Profile" width="50px" height="50px">
+                {% endwith %}
             {% comment %} </div> {% endcomment %}
 
             </div>
@@ -127,16 +129,19 @@
                         <table class="table table-striped table-font">
                             <thead>
                                 <tr>
-                                    <td>Name</td>
-                                    <td>Email</td>
+                                    <td>DP</td>
+                                    <td>Detail</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
                             <tbody>
                             {% for signee in hasAllowed %}
                                 <tr>
-                                <td>{{signee.name}}</td>
-                                <td>{{signee.emailId}}</td>
+                                <td width="40px">{% with 'profile/'|add:signee.emailId|splitByAdtherate as profileLoc %}
+                                    <img src="{% static profileLoc %}" style="display:inline-block;" class="img-fluid z-depth-1 rounded-circle" alt="Profile" width="40px" height="40px">
+                                    {% endwith %}
+                                </td>
+                                <td><div style="font-size:16px">{{signee.name}}</div><div style="font-size:12px">{{signee.emailId}}</div></td>
                                 <td><form method="POST" id="ver" enctype="multipart/form-data">
                                 <input type="hidden" name="verify" value="{{signee.emailId}}" />
                                 <input type="file" class="btn btn-info" name="test" onchange="ver.submit()">
@@ -190,16 +195,18 @@
                         <table class="table table-striped table-font">
                             <thead>
                                 <tr>
-                                    <td>Name</td>
-                                    <td>Email</td>
+                                    <td>DP</td>
+                                    <td>Detail</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for signee in allowed %}
                                 <tr>
-                                <td>{{signee.name}}</td>
-                                <td>{{signee.emailId}}</td>
+                                <td width="40px">{% with 'profile/'|add:signee.emailId|splitByAdtherate as profileLoc %}
+                                    <img src="{% static profileLoc %}" style="display:inline-block;" class="img-fluid z-depth-1 rounded-circle" alt="Profile" width="40px" height="40px">
+                                    {% endwith %}</td>
+                                <td><div style="font-size:16px">{{signee.name}}</div><div style="font-size:12px">{{signee.emailId}}</div></td>
                                 <td><form method="POST" enctype="multipart/form-data">
                                 <button type="submit" name="disallow" value="{{signee.emailId}}" class="btn btn-info">Disallow</button>
                                 </form></td>

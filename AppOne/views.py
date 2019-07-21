@@ -12,6 +12,7 @@ from AppOne.newSignVerify import model, getmd5, train, test
 from django.views.decorators.csrf import csrf_exempt
 
 from django.core.files.storage import FileSystemStorage
+from random import randint
 
 # Create your views here.
 from datetime import datetime as dt
@@ -22,14 +23,16 @@ import os
 
 IP = "192.168.31.102"
 PORT = "3000"
-IMGS_PATH = "./verification/profile"
+IMGS_PATH = "./static/profile"
 GENUINE_PATH = "./verification/genuine"
 TEST_PATH = "./verification/test"
 MODEL_PATH = "./verification/modelsave"
 
 def index(request):
     getmd5('xyz.png')
-    return render(request, 'AppOne/index.html')
+    images = os.listdir('./static/signgif')
+    rand = randint(0, len(images)-1)+1
+    return render(request, 'AppOne/index2.html', {'gif': 'sign'+str(rand)+'.gif'})
 
 
 def home(request):
@@ -124,13 +127,13 @@ def user_login(request):
         data_json = json.dumps(data)
         output = requests.post('http://'+IP+':'+PORT+'/api/UserCheck', headers={"content-type": "application/json"}, data=data_json)
         if output.status_code == 200:
-            
             response = redirect('uploadsign')
             response.set_cookie('id', port)
             response.set_cookie('email', email)
             return response
         else:
-            return redirect('user_login')
+            custom_user_form = Custom_user_form()
+            return render(request, 'AppOne/login.html', {'form':custom_user_form, 'incorrect':'True'})
 
         # user = authenticate(username=username, password=password, email=email)
         # if user:
@@ -148,10 +151,12 @@ def user_login(request):
         #     messages.error(request, 'Sorry Recheck your username or password')
 
 
-@login_required(login_url='/AppOne/user_login')
+# @login_required(login_url='/AppOne/user_login')
 def user_logout(request):
-    logout(request)
-    return redirect("AppOne:register")
+    response = redirect('user_login')
+    response.delete_cookie('email')
+    response.delete_cookie('id')
+    return response 
 
 
 

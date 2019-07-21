@@ -15,23 +15,33 @@
 {% endblock %}
 
 {% block body_block %}
-<div class="jumbotron jumbotron-fluid blue-grey lighten-5 container" style="width:100%">
+	<link rel="stylesheet" href="{% static 'css/loader.css' %}"/>
+<div class="jumbotron jumbotron-fluid blue-grey lighten-5 container" style="width:100%" id="signuploadbox">
+    <div id="nosign">
         <div  class="d-flex justify-content-center">
             <h4 style="font-size:20px;color:blue;">No Signature Classifier!!</h4>
         </div>
     <div  class="row d-flex justify-content-center">
         <h5 style="font-size:14px; color:blue;">Would you like to upload your signatures?</h5>
     </div>
+    </div>
 
     <div class="row d-flex justify-content-center">
     <form method="POST" id="upload" enctype="multipart/form-data">
         <input type="hidden" name="form" value="uploadSign"/>
-        <input class="btn btn-info" type="file" name="signatures" onchange="upload.submit()" multiple>
+        <input class="btn btn-info" type="file" name="signatures" onchange="showTraining(); upload.submit();" multiple>
         </form>
 <!--        <button type="Submit" class="btn btn-info" style="font-size:20px; color:white;">Upload</button>-->
     </div>
 
     </div>
+
+<script>
+    function showTraining(){
+        document.getElementById("nosign").innerHTML = '<div class="d-flex justify-content-center"> <div class="loader"></div></div><div  class="row d-flex justify-content-center"><h2 style="font-size:20px;color:blue;">Your Classifier is Training</h2></div>';
+    }
+</script>
+
 {% endblock %}
 
 

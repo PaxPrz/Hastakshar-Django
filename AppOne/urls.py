@@ -15,8 +15,9 @@ urlpatterns = [
     path('train_sign/', views.train_sign, name='train_sign'),
     path('home/', views.home, name = 'home'),
     path('test_sign/', views.test_sign, name='test_sign'),
-    path('uploadsign/', views.uploadsign, name = 'uploadsign'),
+    path('ghar/', views.uploadsign, name = 'uploadsign'),
     path('welcome/', views.welcome, name='welcome'),
-    path('notification/', views.get_notification, name="notification")
+    path('notification/', views.get_notification, name="notification"),
+    path('logout/', views.user_logout, name = 'logout'),
 ]
 

@@ -9,10 +9,10 @@
             <tbody>
                 {% for user in searchResult %}
                 <tr>
-                    <td>
-                        <div class="col-xl-5 col-md-4 mb-3 text-center">
-                            <img src="{% static '{{email|splitByAdtherate}}' %}" class="img-fluid z-depth-1 rounded-circle" alt="Profile" width="30px" height="30px">
-                        </div>
+                    <td width="70px" style="">
+                            {% with 'profile/'|add:user.emailId|splitByAdtherate as profileLoc %}
+                            <img src="{% static profileLoc %}" style="display:inline-block;" class="img-fluid z-depth-1 rounded-circle" alt="Profile" width="50px" height="50px">
+                            {% endwith %}
                     </td>
                     <td><div style="font-size:16px">{{user.name}}</div><div style="font-size:12px">{{user.emailId}}</div></td>
                     <td>

@@ -21,6 +21,7 @@ from keras import layers
 from keras import models
 from keras import optimizers
 
+EPOCHS=20
 train_path = './verification/trainingset'
 x_genuine_path = './verification/genuine'
 x_forgery_path = './verification/forgery'
@@ -314,7 +315,7 @@ def train(filename):
     x_random = csvReader(os.path.join(x_random_csv_path, 'random3'))
     # another training
     mod.fit(np.concatenate((x_genuine, x_random)).reshape(x_genuine.shape[0] + x_random.shape[0], 300, 300, 1),
-            np.concatenate((np.full(x_genuine.shape[0], 1), np.full(x_random.shape[0], 0))), epochs=2, verbose=1,
+            np.concatenate((np.full(x_genuine.shape[0], 1), np.full(x_random.shape[0], 0))), epochs=EPOCHS, verbose=1,
             shuffle=True)
 
     evaluated = mod.evaluate(x_genuine.reshape(x_genuine.shape[0], 300, 300, 1), np.full((x_genuine.shape[0]), 1))
