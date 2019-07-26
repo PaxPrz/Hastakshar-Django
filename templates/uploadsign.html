@@ -1,15 +1,23 @@
 {% extends 'home.html' %}
 {% load staticfiles %}
+{% if hasSign == "False" %}
+    {% block body_block %}
+    <div class="jumbotron jumbotron-fluid blue-grey lighten-5 container" style="width:100%">
+            <div  class="d-flex justify-content-center">
+                <h4 style="font-size:20px;color:blue;">No Signature Classifier!!</h4>
+            </div>
+        <div  class="row d-flex justify-content-center">
+            <h5 style="font-size:14px; color:blue;">Would you like to upload your signatures?</h5>
+        </div>
 
-{% block body_block %}
- <div class="jumbotron jumbotron-fluid blue-grey lighten-5 container">
-           <div  class="row d-flex justify-content-center">
-               <h4 style="font-size:30px;color:blue;">You don't have any documents!!</h4>
-           </div>
-       <div  class="row d-flex justify-content-center">
-           <h5 style="font-size:20px; color:blue;">Would you like to upload your signatures?</h5>
-       </div>
+        <div class="row d-flex justify-content-center">
+        <form method="POST" name="upload" value="uploadSign" enctype="multipart/form-data">
+            <input class="btn btn-info" type="file" name="signatures" placeholder="Upload" onchange="form.submit()" multiple>
+            </form>
+    <!--        <button type="Submit" class="btn btn-info" style="font-size:20px; color:white;">Upload</button>-->
+        </div>
 
+<<<<<<< HEAD
        <div class="row d-flex justify-content-center">
            <a href="{% url 'upload' %}" class="btn btn-info">Upload</a>
 <!--        <button type="Submit" class="btn btn-info" style="font-size:20px; color:white;">Upload</button>-->
@@ -18,3 +26,10 @@
        </div>
 {% endblock %}
 
+=======
+        </div>
+    {% endblock %}
+{% else %}
+    
+{% endif %}
+>>>>>>> b44aa4093e45a666fdb55b8ebc7eda5785c838e9
